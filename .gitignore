@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Database & logs
+*.db
+netsentinel.db
+logs/
+*.log
+
+# IDE & Editor settings
+.vscode/
+.idea/
+
+# OS specific
+Thumbs.db
+Desktop.ini

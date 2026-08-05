@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  netsentinel:
+    build: .
+    container_name: netsentinel
+    restart: unless-stopped
+
+    # Network mode: host allows packet capture from host network
+    network_mode: host
+
+    # Privileged mode required for packet capture
+    privileged: true
+
+    # Capabilities for packet capture (alternative to privileged)
+    # cap_add:
+    #   - NET_ADMIN
+    #   - NET_RAW
+
+    volumes:
+      # Persist database
+      - ./netsentinel.db:/app/netsentinel.db
+      # Persist logs
+      - ./logs:/app/logs
+      # Mount config (optional - for easy updates)
+      - ./config.py:/app/config.py:ro
+
+    environment:
+      # Override config via environment variables (optional)
+      - FLASK_HOST=0.0.0.0
+      - FLASK_PORT=5000
+      - FLASK_DEBUG=false
+
+    # Resource limits (optional)
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Optional: Add PostgreSQL for production database
+#   postgres:
+#     image: postgres:15-alpine
+#     container_name: netsentinel-db
+#     restart: unless-stopped
+#     environment:
+#       POSTGRES_DB: netsentinel
+#       POSTGRES_USER: netsentinel
+#       POSTGRES_PASSWORD: changeme
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     ports:
+#       - "5432:5432"
+
+# volumes:
+#   postgres_data:
